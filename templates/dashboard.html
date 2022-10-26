@@ -1,0 +1,39 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<main class="pt-5">
+  <div class="container" style="max-width: 1000px">
+    <div class="col-12">
+      <h1 class="h2">Your Dashboard</h1>
+    </div>
+    <div class="col-12 d-flex justify-content-between">
+      <div>Manage your <b>Xray results</b> and personal details</div>
+      <div><a href="{% url 'image_classification:index' %}">Predict new Xray</a></div>
+      <div><a href="{% url 'account:edit_details' %}">Change Details</a></div>
+    </div>
+    <hr />
+  </div>
+  <div class="container text-center" style="max-width: 1000px">
+    <div class="d-flex d-flex-inline text-left">
+        <div class="container text-center">
+        <div class="d-grid gap-2 ">
+    {% for result in results %}
+          <div class="jumbotron">
+            <h1 class="display-4">{{result.result}}</h1>
+            <p class="lead">{{result.desc}}</p>
+            <hr class="my-4">
+            <p>conducted on {{result.created}}</p>
+            <p class="lead">
+              <a class="btn btn-primary btn-lg" href= "{% url 'image_classification:getpdf' %}?q={{result.id}}" role="button">Get PDF file</a>
+            </p>
+          </div>
+
+    {% endfor %}
+        </div>
+        </div>
+  </div>
+  </div>
+</main>
+
+
+{% endblock %}

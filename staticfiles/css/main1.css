@@ -1,0 +1,120 @@
+
+body{
+	background-color: hsl(0, 0%, 99%);
+}
+
+html{
+	scroll-behavior: smooth;
+}
+
+h1,h2,h3,h4,h5,h6{
+	color:hsl(0, 1%, 28%);
+}
+
+.box-element{
+	border-radius: 4px;
+	padding: 10px;
+	animation: draw 2s forwards;
+}
+
+.thumbnail{
+	width: 100%;
+	height: 200px;
+	-webkit-box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+    -moz-box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+    box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+}
+
+.product{
+	border-radius: 0 0 4px 4px;
+}
+
+.bg-dark{
+	background-color: #f9f9f9!important;
+}
+
+
+.back-to-prod {
+	right: 100px;
+	bottom: 100px;
+	z-index: 0;
+	animation: action 1s infinite alternate;
+}
+
+
+#cart-icon{
+	width:25px;
+	display: inline-block;
+	margin-left: 15px;
+}
+
+.col-lg-4, .col-lg-6, .col-lg-8, .col-lg-12{
+	margin-top: 10px;
+}
+
+.btn{
+	border-radius: 0;
+}
+
+.row-image{
+	width: 100px;
+}
+
+.form-field{
+	width:250px;
+	display: inline-block;
+	padding: 5px;
+}
+
+.cart-row{
+	display: flex;
+    align-items: flex-stretch;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ececec;
+
+}
+
+.quantity{
+	display: inline-block;
+	font-weight: 700;
+	padding-right:10px;
+	
+
+}
+
+.chg-quantity{
+	width: 12px;
+	cursor: pointer;
+	display: block;
+	margin-top: 5px;
+	transition:.1s;
+}
+
+.chg-quantity:hover{
+	opacity: .6;
+}
+
+
+.hidden{
+	display: none!important;
+}
+
+svg {
+	fill-opacity: 0;
+  }
+  
+  svg path {
+	stroke-dasharray: 1;
+	stroke-dashoffset: 1;  
+	animation: draw 2s forwards;
+  }
+  
+  @keyframes draw {
+	from {
+	  stroke-dashoffset: 1;
+	}
+	to {
+	  stroke-dashoffset: 0;
+	}
+  }
