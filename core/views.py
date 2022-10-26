@@ -115,8 +115,8 @@ def GetPDF(request):
     p.drawString(100, 400, res.result)
     p.drawString(100, 500, "User_name:" + res.user.user_name)
     p.drawString(100, 300, "Date - " + DateTime)
-
+    p.drawString(100, 600, "X-ify: result")
     p.showPage()
     p.save()
     buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename=f'test_{primary_k}.pdf')
+    return FileResponse(buffer, as_attachment=True, filename=f'{res.user.user_name}_{primary_k}.pdf')
