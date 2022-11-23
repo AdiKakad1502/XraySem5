@@ -37,22 +37,45 @@ class CustomAccountManager(BaseUserManager):
 
 
 class UserBase(AbstractBaseUser, PermissionsMixin):
+    Gender_choices = (
+        ('Female', 'Female'),
+        ('Male', 'Male'),
+        ('Others', 'Others')
+    )
 
+    Marital_choices = (
+        ('Married', 'Married'),
+        ('Not Married', 'Not Married'),
+    )
+
+    Blood_group_choices = (
+        ('O-positive', 'O-positive'),
+        ('O-negative', 'O-negative'),
+        ('A-positive', 'A-positive'),
+        ('A-negative', 'A-negative'),
+        ('B-positive', 'B-positive'),
+        ('B-negative', 'B-negative'),
+        ('AB-positive', 'AB-positive'),
+        ('AB-negative', 'AB-negative')
+    )
     email = models.EmailField(_('email address'), unique=True)
     user_name = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=150, blank=True)
     about = models.TextField(_(
         'about'), max_length=500, blank=True)
-    # Delivery details
     country = CountryField()
-    # User Status
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
+    address = models.CharField(blank=True, max_length=200)
+    height = models.IntegerField(blank=True, null=True)
+    weight = models.IntegerField(blank=True, null=True)
+    marital_status = models.CharField(default=False, blank=True, choices=Marital_choices, max_length=25)
+    Gender = models.CharField(max_length=15, choices=Gender_choices, blank=True)
     objects = CustomAccountManager()
-
+    Contact = models.IntegerField(null=True, blank=True)
+    Blood_group = models.CharField(max_length=15, choices=Blood_group_choices, blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['user_name']
 
@@ -64,7 +87,7 @@ class UserBase(AbstractBaseUser, PermissionsMixin):
         send_mail(
             subject,
             message,
-            'l@1.com',
+            '1@e.com',
             [self.email],
             fail_silently=False,
         )

@@ -94,16 +94,39 @@ class UserEditForm(forms.ModelForm):
             attrs={'class': 'form-control mb-3', 'placeholder': 'email', 'id': 'form-email', 'readonly': 'readonly'}))
 
     user_name = forms.CharField(
-        label='Firstname', min_length=4, max_length=50, widget=forms.TextInput(
+        label='Username (can not be changed)', min_length=0, max_length=50, widget=forms.TextInput(
             attrs={'class': 'form-control mb-3', 'placeholder': 'Username', 'id': 'form-firstname', 'readonly': 'readonly'}))
 
     first_name = forms.CharField(
-        label='Username', min_length=4, max_length=50, widget=forms.TextInput(
-            attrs={'class': 'form-control mb-3', 'placeholder': 'Firstname', 'id': 'form-lastname'}))
+        label='Display name', min_length=4, max_length=50, widget=forms.TextInput(
+            attrs={'class': 'form-control mb-3', 'placeholder': 'Display name', 'id': 'form-lastname'}))
+
+    Contact = forms.IntegerField(
+        label='Phone number', widget=forms.TextInput(
+            attrs={'class': 'form-control mb-3', 'placeholder': 'Phone number', 'id': 'form-contact'}))
+
+    height = forms.IntegerField(
+        label='Height', widget=forms.TextInput(
+            attrs={'class': 'form-control mb-3', 'placeholder': 'Height', 'id': 'form-height'}
+        )
+    )
+
+    weight = forms.IntegerField(
+        label='Weight', widget=forms.TextInput(
+            attrs={'class': 'form-control mb-3', 'placeholder': 'Weight', 'id': 'form-weight'}
+        )
+    )
+
+    address = forms.CharField(
+        label='Address', widget=forms.TextInput(
+            attrs={'class': 'form-control mb-3', 'placeholder': 'Address', 'id': 'form-address'}
+        )
+    )
+
 
     class Meta:
         model = UserBase
-        fields = ('email', 'user_name', 'first_name',)
+        fields = ('email', 'user_name', 'first_name', 'Contact', 'height', 'weight', 'address', 'marital_status', 'Gender', 'Blood_group')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

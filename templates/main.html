@@ -1,16 +1,33 @@
 {% load static %}
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <title>XrayNet</title>
+    <title>X-ify</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
+<style>
+      .input-div{
+        text-align:center;
+        border:thin solid black;
+      }
+        .input-image{
+        display: none;
+      }
+      .label-image{
+        cursor:pointer;
+      }
+      #imageName{
+        color:green;
+      }
+  </style>
 
     <!-- Favicon -->
-    <link href="{% static 'img/favicon.ico' %}" rel="icon">
-
+    <link href="{% static 'img/favicon.ico' %}" rel="ico    n">
+    <link
+    href="https://fonts.googleapis.com/css2?family=Epilogue:wght@200;300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <script src="https://kit.fontawesome.com/dbed6b6114.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{% static 'images/Upload/style.css' %}">
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?  family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -28,65 +45,32 @@
 <body class = "bg-light">
     <!-- Topbar Start -->
     <div class="container-fluid bg-light">
-        <div class="row bg-primary py-2 px-xl-5">
-            <div class="col-lg-6 d-none d-lg-block">
-                <div class="d-inline-flex align-items-center">
-                    <a class="text-dark" href="">FAQs</a>
-                    <span class="text-muted px-2">|</span>
-                    <a class="text-dark" href="">Help</a>
-                    <span class="text-muted px-2">|</span>
-                    <a class="text-dark" href="">Support</a>
-                </div>
-            </div>
-            <div class="col-lg-6 text-center text-lg-right">
-                <div class="d-inline-flex align-items-center">
-                    {% if request.user.is_authenticated %}
-                    <a class="text-secondary px-2" href="">
-                        Hey, {{user}}
-                    </a>
-                    {% endif %}
-                    <a class="text-dark px-2" href="">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a class="text-dark px-2" href="">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a class="text-dark px-2" href="#" target="_blank">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a class="text-dark px-2" href="">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a class="text-dark pl-2" href="">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
 
         <div class="navbar row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a href="/" class="text-decoration-none">
-                    <h1 class="m-0 display-5 font-weight-semi-bold">Xr<span class = "    font-weight-bold">ay</span>Net</h1>
+                    <h1 class="m-0 display-5 font-weight-semi-bold"><span class = "    font-weight-bold">X-ify</span></h1>
                 </a>
             </div>
             <div class="col-lg-3 col-6 text-right">
 
                 {% if request.user.is_authenticated %}
-                <a href="{% url 'account:dashboard' %}" class="btn border">
+                {% if request.user.first_name is None %}
+                <a class = "btn btn-dark-outline">{{request.user}}</a>
+                {% else %}
+                <a class = "btn btn-dark-outline">{{request.user.first_name}}</a>
+                {% endif %}
+                <a href="{% url 'account:dashboard' %}" class="btn btn-light-outline">
                     Dashboard
                 </a>
-                <a href="{% url 'image_classification:index' %}" class="btn border">
-                    <i class="fas fa-heart text-primary"></i>
-                </a>
-                <a href = "{% url 'account:logout' %}" class="btn border">
+                <a href = "{% url 'account:logout' %}" class="btn btn-light-outline">
                     Logout
                 </a>
                 {% else %}
-                <a class="btn border" href ="{% url 'account:login' %}" id = "LoginButton">
+                <a class="btn btn-light-outline" href ="{% url 'account:login' %}" id = "LoginButton">
                     Login
                 </a>
-                <a class="btn border" href = "{% url 'account:register' %}" id = "RegisterButton">
+                <a class="btn btn-light-outline" href = "{% url 'account:register' %}" id = "RegisterButton">
                     Register
                 </a>
                 {% endif %}
@@ -94,14 +78,61 @@
 
         </div>
     </div>
+    <link
+    href="https://fonts.googleapis.com/css2?family=Epilogue:wght@200;300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?  family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+  <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/dbed6b6114.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'images/Upload/style.css' %}">
+
 
     {% block content %}
 
     {% endblock content %}
+     <footer>
+    <div class="footer-wrapper">
+      <div class="footer-bg">
+        <ul class="footer-icons">
+          <li class="footer-icon-item">
+            <i class="fab fa-facebook-f"></i>
+          </li>
+          <li class="footer-icon-item">
+            <i class="fab fa-twitter"></i>
+          </li>
+          <li class="footer-icon-item">
+            <i class="fab fa-instagram"></i>
+          </li>
+          <li class="footer-icon-item">
+            <i class="fab fa-youtube"></i>
+          </li>
+        </ul>
+      </div>
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
+      <div class="footer-text">
+        <p class="text-light">Copyright &copy; 2022 Design Project</p>
+      </div>
+    </div>
+  </footer>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+  <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="{% static 'js/cart1.js' %}"></script>
+  <script src="{% static 'mail/jqBootstrapValidation.min.js' %}"></script>
+  <script src="{% static 'mail/contact.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+  <script src="{% static 'images/Upload/script.js'%}"></script>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -114,6 +145,8 @@
     <script src="{% static 'mail/contact.js' %}"></script>
 
     <!-- Template Javascript -->
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'images/Upload/script.js'%}"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'js/cart1.js' %}"></script>
 </body>

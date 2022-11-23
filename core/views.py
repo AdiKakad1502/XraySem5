@@ -1,9 +1,10 @@
 import base64
-import io
 import json
 import os
 import torch
 import torch.nn as nn
+from django.utils.decorators import method_decorator
+from django.views import View
 from torchvision import models
 from torchvision import transforms
 from PIL import Image
@@ -13,9 +14,9 @@ from .forms import ImageUploadForm
 from django.contrib.auth.decorators import login_required
 from .models import results
 import io
-from django.http import FileResponse
-from reportlab.pdfgen import canvas
-from datetime import datetime
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 
 def CNN_Model(pretrained=True):
@@ -29,8 +30,23 @@ def CNN_Model(pretrained=True):
     model = model.to(device)
     return model
 
+MODEL_PATH_Covid = os.path.join(settings.STATIC_ROOT, "Covid-normal-differentiator.pth")
+model_final_Covid = CNN_Model(pretrained=False)
+model_final_Covid.to(torch.device('cpu'))
+model_final_Covid.load_state_dict(torch.load(MODEL_PATH_Covid, map_location='cpu'))
+model_final_Covid.eval()
+json_path_covid = os.path.join(settings.STATIC_ROOT, "classes-covid.json")
+imagenet_mapping_Covid = json.load(open(json_path_covid))
 
-MODEL_PATH = os.path.join(settings.STATIC_ROOT, "New_model.pth")
+MODEL_PATH_XRAY = os.path.join(settings.STATIC_ROOT, "Xray-normal-differentiator .pth")
+model_final_xray = CNN_Model(pretrained=False)
+model_final_xray.to(torch.device('cpu'))
+model_final_xray.load_state_dict(torch.load(MODEL_PATH_XRAY, map_location='cpu'))
+model_final_xray.eval()
+json_path1 = os.path.join(settings.STATIC_ROOT, "classes-xray.json")
+imagenet_mapping_Xray = json.load(open(json_path1))
+
+MODEL_PATH = os.path.join(settings.STATIC_ROOT, "Pneumonia-normal-differentiator.pth")
 model_final = CNN_Model(pretrained=False)
 model_final.to(torch.device('cpu'))
 model_final.load_state_dict(torch.load(MODEL_PATH, map_location='cpu'))
@@ -51,6 +67,24 @@ def transform_image(image_bytes):
     return my_transforms(image).unsqueeze(0)
 
 
+def get_prediction_Covid(image_bytes):
+    tensor = transform_image(image_bytes)
+    outputs = model_final_Covid.forward(tensor)
+    _, y_hat = outputs.max(1)
+    predicted_idx = str(y_hat.item())
+    class_name, human_label = imagenet_mapping_Covid[predicted_idx]
+    return human_label
+
+
+def get_prediction_Xray(image_bytes):
+    tensor = transform_image(image_bytes)
+    outputs = model_final_xray.forward(tensor)
+    _, y_hat = outputs.max(1)
+    predicted_idx = str(y_hat.item())
+    class_name, human_label = imagenet_mapping_Xray[predicted_idx]
+    return human_label
+
+
 def get_prediction(image_bytes):
     tensor = transform_image(image_bytes)
     outputs = model_final.forward(tensor)
@@ -59,13 +93,14 @@ def get_prediction(image_bytes):
     class_name, human_label = imagenet_mapping[predicted_idx]
     return human_label
 
-
-@login_required
-def index(request):
-    image_url = None
-    predicted_label = None
-
-    if request.method == 'POST':
+class MainPage(View):
+    @method_decorator(login_required)
+    def post(self, request):
+        image_url = None
+        predicted_label = None
+        check_label = "normal"
+        predicted_label_covid = None
+        pre = "Not a valid image!"
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             image = form.cleaned_data['image']
@@ -73,50 +108,62 @@ def index(request):
             encoded_img = base64.b64encode(image_bytes).decode('ascii')
             image_url = 'data:%s;base64,%s' % ('image/jpeg', encoded_img)
             try:
-                predicted_label = get_prediction(image_bytes)
-                user_id = request.user.id
-                rng = "rng"
-                pn = "pneumonia"
-                print(predicted_label)
-                if predicted_label == pn:
-                    rng = "Infection that inflames air sacs in one or both lungs, which may fill with fluid. With pneumonia, the air sacs may fill with fluid or pus. The infection can be life-threatening to anyone, but particularly to infants, children and people over 65.Symptoms include a cough with phlegm or pus, fever, chills and difficulty breathing."
-                else:
-                    rng = "Your pneumonia negative! But still remember precaution is better than cure. Wash your hands regularly, especially after you go to the bathroom and before you eat.Eat right, with plenty of fruits and vegetables and remember to Exercise, Get enough sleep, Quit smoking. Stay away from sick people, if possible."
-                results.objects.create(user_id=user_id, full_name='name', result=predicted_label, desc=rng)
-
+                check_for_xray = get_prediction_Xray(image_bytes)
+                if check_for_xray == check_label:
+                    predicted_label = get_prediction(image_bytes)
+                    user_id = request.user.id
+                    predicted_label_covid = get_prediction_Covid(image_bytes)
+                    description = f"Covid-19 : {predicted_label_covid}\nPneumonia : {predicted_label}"
+                    results.objects.create(user_id=user_id, full_name='name', result_pneumonia=predicted_label,
+                                           result_covid=predicted_label_covid,
+                                           desc=description, image=image)
             except RuntimeError as re:
                 print(re)
-
-    else:
+        context = {
+            'image_url': image_url,
+            'form': form,
+            'predicted_label': predicted_label,
+            'predicted_label_covid': predicted_label_covid,
+            'pre': pre,
+        }
+        return render(request, 'index.html', context)
+    @method_decorator(login_required)
+    def get(self, request):
         form = ImageUploadForm()
-
-    context = {
-        'form': form,
-        'image_url': image_url,
-        'predicted_label': predicted_label,
-    }
-    return render(request, 'index.html', context)
-
-
+        image_url = None
+        predicted_label = None
+        predicted_label_covid = None
+        pre = "Not a valid image!"
+        context = {
+            'image_url': image_url,
+            'form': form,
+            'predicted_label': predicted_label,
+            'predicted_label_covid': predicted_label_covid,
+            'pre': pre,
+        }
+        return render(request, 'index.html', context)
 @login_required
 def user_result(request):
     user_id = request.user.id
     res = results.objects.filter(user_id=user_id)
     return res
 
-
-@login_required
-def GetPDF(request):
-    buffer = io.BytesIO()
-    p = canvas.Canvas(buffer)
-    primary_k = request.GET.get('q', 12)
-    res = results.objects.get(id=primary_k)
-    DateTime = datetime.utcnow().strftime('%Y-%m-%d')
-    p.drawString(100, 400, res.result)
-    p.drawString(100, 500, "User_name:" + res.user.user_name)
-    p.drawString(100, 300, "Date - " + DateTime)
-    p.drawString(100, 600, "X-ify: result")
-    p.showPage()
-    p.save()
-    buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename=f'{res.user.user_name}_{primary_k}.pdf')
+class MakePDF(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        primary_k = request.GET.get('q')
+        res = results.objects.get(id=primary_k)
+        if request.user == res.user:
+            template_path = 'pdfFile1.html'
+            context = {'res': res}
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+            template = get_template(template_path)
+            html = template.render(context)
+            pisa_status = pisa.CreatePDF(
+                html, dest=response
+            )
+            if pisa_status.err:
+                return HttpResponse("Something went wrong!<pre>" + html + '</pre>')
+            return response
+        return HttpResponse("That's not your report bud! Not cool!")

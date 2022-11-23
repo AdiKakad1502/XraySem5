@@ -1,30 +1,78 @@
 {% extends 'main.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
 {% if request.user.is_authenticated %}
-<div class = "container my-4">
-    <div class = "text-center container my-4">
-<form method="post" enctype="multipart/form-data" style="margin-top: 50px; margin-bottom: 30px;">
-    {% csrf_token %}
-    {{ form }}
-    <button type="submit" id="btnUpload" class="btn btn-primary">Upload</button>
-</form>
-    </div>
-{% if image_url is not None %}
-    {% if predicted_label is not None %}
-        <div class="alert alert-success" role="alert">
-            Predicted label: <b>{{ predicted_label }}</b>
+
+
+<div class="header-banner">
+      <div class="header-banner-content">
+        <div class="banner-line"></div>
+        <h1 class="banner-title">
+          <span>"The secret of crisis management is not good vs bad,<br>It's preventing the bad from getting
+            worse."</span>
+            <span class = "font-weight-bold">X-ify</span>
+        </h1>
+          <div class="text-center my-4 container">
+              <div class = "container text-center" style="width: 480px;">
+      {% if image_url is None and predicted_label is None %}
+             <form method="post" enctype="multipart/form-data" style="margin-top: 50px; margin-bottom: 30px;">
+                {% csrf_token %}
+                 <div class = "input-div">
+                     <br/>
+                  <label class = "label-image" for="inputTag">
+                    <i class="fas fa-cloud-upload-alt "></i>
+                      <p>browse file to upload</p>
+                    <input class = "input-image" id="inputTag" type="file" value="{{ form.image }}
+                    <br/>
+                    <span id="imageName"></span></label>
+                </div>
+                 <br>
+            <button type="submit" id="btnUpload" class="btn btn-light">Upload</button>
+            </form>
+    {% elif predicted_label is not None and image_url is not None %}
+        <div class="alert alert-dark" role="alert">
+            Predicted label: <br>
+            Pneumonia : {{predicted_label}}&nbsp;&nbsp;&nbsp;
+            Covid-19 : {{predicted_label_covid}}
         </div>
+                   <div class="d-flex flex-row text-center">
+                            <div class="p-2">
+                                <p class="small text-center pt-0">
+                                <a href= "{% url 'account:dashboard' %}" role="button">Download the report</a>
+                                </p>
+                            </div>
+                            <div class="p-2">
+                                <p class="small text-center pt-0">
+                                <a href="{% url 'image_classification:index' %}" id="main-page">Predict new Xray</a>
+                                </p>
+                            </div>
+                        </div>
     {% else %}
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-warning" role="alert">
             Prediction error. No label predicted.
         </div>
+                  <div class="d-flex flex-row text-center">
+                            <div class="p-2">
+                                <p class="small text-center pt-0">
+                                <a href="{% url 'image_classification:index' %}" id="main-page">Predict new Xray</a>
+                                </p>
+                            </div>
+                        </div>
     {% endif %}
-<div class = "container my-4 text-center">
-    <img src="{{ image_url }}" class="img-fluid" alt="Uploaded image"
-         style="max-width: min(500px, 100%); height: auto; margin-top: 30px;">
+                  </div>
+          </div>
+      </div>
 </div>
-    {% endif %}
-</div>
+
+<script> let input = document.getElementById("inputTag");
+        let imageName = document.getElementById("imageName")
+
+        input.addEventListener("change", ()=>{
+            let inputImage = document.querySelector("input[type=file]").files[0];
+
+            imageName.innerText = inputImage.name;
+        })
+    </script>
 {% endif %}
 {% endblock %}

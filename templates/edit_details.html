@@ -1,6 +1,6 @@
 {% extends 'main.html' %}
 {% block content %}
-
+{% load crispy_forms_tags %}
 <style>
     .account-form input {
         border: 2px solid #ccc;
@@ -12,6 +12,9 @@
         box-shadow: none;
     }
 </style>
+<br>
+<br>
+<br>
 
 <div class="container-fluid">
     <div class="row no-gutter">
@@ -21,18 +24,33 @@
                     <div class="row">
                         <div class="col-12 col-lg-7  mx-auto">
 
-                <form class="account-form px-4 pt-4" method="post" enctype="multipart/form-data">
+                <form class="account-form px-4 pt-4" action="{% url 'account:edit_details' %}" method="post" enctype="multipart/form-data">
 
-                    {% if user_form.is_valid and profile_form.is_valid  %}
-                    <div class="alert alert-primary" role="alert">
+                    {% if user_form.is_valid or profile_form.is_valid  %}
+                    <div class="alert alert-success" role="alert">
                         Details successfully updated!
                     </div>
-                    <p class="small text-center pt-0">
-                        <a href="{% url 'account:dashboard' %}">Back to Dashboard</a>
-                    </p>
+
+                        <div class="d-flex flex-row text-center">
+                            <div class="p-2">
+                                <p class="small text-center pt-0">
+                                <a href="{% url 'account:dashboard' %}">Back to Dashboard</a>
+                                </p>
+                            </div>
+                            <div class="p-2">
+                                <p class="small text-center pt-0">
+                                <a href="{% url 'account:edit_details' %}">Change details</a>
+                                </p>
+                            </div>
+                        </div>
                     {%else%}
                     <h3>Change your details</h3>
                     <p>You can edit your account using the following form:</p>
+                    {% csrf_token %}
+                    {{ user_form|crispy }}
+                    <button class="btn btn-light btn-block py-2 mb-4 mt-5 fw-bold w-100" type="submit"
+                        value="Save changes">Save Changes</button>
+                    <hr class="mb-3">
                     {% endif %}
 
                     {% if form.errors %}
@@ -41,17 +59,7 @@
                     </div>
                     {% endif %}
 
-                    {% csrf_token %}
-                    <label class="small font-weight-bold">{{ user_form.email.label}}</label>
-                    {{ user_form.email }}
-                    <label class="small font-weight-bold">{{ user_form.first_name.label}}</label>
-                    {{ user_form.first_name }}
 
-
-
-                    <button class="btn btn-primary btn-block py-2 mb-4 mt-5 fw-bold w-100" type="submit"
-                        value="Save changes">Save Changes</button>
-                    <hr class="mb-3">
                 </form>
                      <form class="account-form px-4" action="{% url 'account:delete_user' %}" method="post">
                         {% csrf_token %}

@@ -39,16 +39,15 @@
                                 {% endif %}
 
                                 <label class="form-label">{{ form.username.label}}</label>
-                                {{ form.username}}
-
+                                 {{ form.username }}
                                 <label class="form-label">{{ form.password.label}}</label>
                                 {{ form.password}}
                                 <div class="d-grid gap-2">
                                     <input type="hidden" name="next" value="{{ next }}">
-                                    <button class="btn btn-primary py-2 mb-4 mt-5 fw-bold" type="submit" value="Log-in">Sign in
+                                    <button class="btn btn-light btn-block py-2 mb-4 mt-5 fw500 w-100" type="submit" id = "submit-login" value="Log-in">Sign in
                                     </button>
                                 </div>
-                                <p class="text-center pb-3">
+                                <p class="text-centerpb-3">
                                     <a href="{% url 'account:register' %}">Create an account</a>
                                 </p>
                             </form>
