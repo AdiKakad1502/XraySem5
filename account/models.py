@@ -76,6 +76,7 @@ class UserBase(AbstractBaseUser, PermissionsMixin):
     objects = CustomAccountManager()
     Contact = models.IntegerField(null=True, blank=True)
     Blood_group = models.CharField(max_length=15, choices=Blood_group_choices, blank=True)
+    ReportCount = models.IntegerField(blank=True, default=0)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['user_name']
 

@@ -1,0 +1,109 @@
+@import url('http://fonts.googleapis.com/css2?family=poppins:wght@400;500;600&display=swap');
+*{
+    margin : 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins",sans-serif;
+}
+#div1{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    background: #6990f6;
+}
+.wrapper{
+    width: 430px;
+    padding: 30px;
+    background: #fff;
+    border-radius: 5px;
+}
+.wrapper header{
+    color: #6990f6;
+    font-size: 27px;
+    font-weight: 600;
+    text-align: center;
+
+}
+.wrapper form{
+    height: 167px;
+    display: flex;
+    margin: 30px 0;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 5px;
+    border: 2px dashed #000;
+}
+form :where(i,p){
+    color: #445684;
+}
+form i{
+    font-size: 50px;
+}
+form p{
+    font-size: 16px;
+    margin-top: 15px;
+}
+section .row{
+    background: #e9f0ff;
+    margin-bottom: 10px;
+    list-style: none;
+    padding: 15px 20px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+section .row i{
+    font-size: 30px;
+    color: #6990f2;
+}
+section .details span{
+    font-size: 14px;
+}
+.progress-area .row .content{
+    width: 100%;
+    margin-left: 15px;
+}
+
+.progress-area .details{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.progress-area .progress-bar{
+    height: 6px;
+    width: 100%;
+    background:#fff;
+    margin-bottom: 4px;
+    border-radius: 30px;
+}
+.progress-bar .progress{
+    height: 100%;
+    width: 70%;
+    background: #5475c8;
+    border-radius: inherit;
+}
+.uploaded-area .onprogress{
+    max-height: 150px;
+}
+.uploaded-area .row .content{
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+}
+.uploaded-area .row .details{
+    display: flex;
+    margin-left: 15px;
+    flex-direction: column;
+}
+.uploaded-area .fa-check{
+    color: #6990f2;
+    font-size: 16px;
+}
+.uploaded-area .details .size{
+    font-size: 11px;
+    color: #404040;
+}

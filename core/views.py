@@ -8,7 +8,7 @@ from django.views import View
 from torchvision import models
 from torchvision import transforms
 from PIL import Image
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
 from .forms import ImageUploadForm
 from django.contrib.auth.decorators import login_required
@@ -17,7 +17,6 @@ import io
 from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-
 
 def CNN_Model(pretrained=True):
     if torch.cuda.is_available():
@@ -46,7 +45,7 @@ model_final_xray.eval()
 json_path1 = os.path.join(settings.STATIC_ROOT, "classes-xray.json")
 imagenet_mapping_Xray = json.load(open(json_path1))
 
-MODEL_PATH = os.path.join(settings.STATIC_ROOT, "Pneumonia-normal-differentiator.pth")
+MODEL_PATH = os.path.join(settings.STATIC_ROOT, "B-A-diff.pth")
 model_final = CNN_Model(pretrained=False)
 model_final.to(torch.device('cpu'))
 model_final.load_state_dict(torch.load(MODEL_PATH, map_location='cpu'))
@@ -117,6 +116,9 @@ class MainPage(View):
                     results.objects.create(user_id=user_id, full_name='name', result_pneumonia=predicted_label,
                                            result_covid=predicted_label_covid,
                                            desc=description, image=image)
+                    user = request.user
+                    user.ReportCount += 1
+                    user.save()
             except RuntimeError as re:
                 print(re)
         context = {
@@ -167,3 +169,17 @@ class MakePDF(View):
                 return HttpResponse("Something went wrong!<pre>" + html + '</pre>')
             return response
         return HttpResponse("That's not your report bud! Not cool!")
+
+class DeleteReport(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        pk = request.GET.get('q')
+        res = results.objects.get(id=pk)
+        if request.user == res.user:
+            print(f'initial {res.is_visible} \n')
+            res.is_visible = False
+            user = request.user
+            user.ReportCount -= 1
+            user.save()
+            res.save()
+        return redirect('account:dashboard')

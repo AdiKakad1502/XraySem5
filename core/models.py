@@ -13,6 +13,7 @@ class results(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     image = models.ImageField(null=True, blank=True, upload_to="images/")
+    is_visible = models.BooleanField(default=True)
     class Meta:
         ordering = ('-created',)
 

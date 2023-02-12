@@ -12,4 +12,5 @@ urlpatterns = [
     # two paths: with or without given image
     path('', views.MainPage.as_view(), name='index'),
     path('getpdf', views.MakePDF.as_view(), name='getpdf'),
+    path('deletereport', views.DeleteReport.as_view(), name='deletereport')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

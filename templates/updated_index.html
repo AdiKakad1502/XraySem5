@@ -1,0 +1,137 @@
+{% load static %}
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>X-ify</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Epilogue:wght@200;300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?  family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+  <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/dbed6b6114.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'images/Upload/style.css' %}">
+</head>
+
+<body>
+
+  <!-- header section -->
+  <section id="home" class="section header py-5">
+    <!-- navbar -->
+    <nav class="navbar">
+      <div class="brand-and-toggler">
+        <a href="/" class="navbar-brand">
+          X-ify
+        </a>
+        <button type="button" class="navbar-toggler" id="navbar-toggler">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+
+      <div class="navbar-collapse">
+        <ul class="navbar-nav">
+          {% if request.user.is_authenticated %}
+          <li class="nav-item">
+            <a href="{% url 'account:dashboard' %}" class="nav-link">Dashboard</a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{% url 'image_classification:index' %}" class="nav-link">Upload</a>
+          </li>
+
+          <li class="nav-item">
+            <a href = "{% url 'account:logout' %}" class="nav-link">Sign out</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a href ="{% url 'account:login' %}" class="nav-link">Sign In</a>
+          </li>
+          <li class="nav-item">
+            <a href = "{% url 'account:register' %}" class="nav-link">Sign up</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+    <!-- end of navbar -->
+    <!-- header banner -->
+    <div class="header-banner">
+      <div class="header-banner-content">
+        <div class="banner-line"></div>
+        <h1 class="banner-title">
+          <span>"The secret of crisis management is not good vs bad,<br>It's preventing the bad from getting
+            worse."</span>
+          <span>X-ify</span>
+          <a href="#about">
+            <button type="button" class="banner-btn" onclick="document.getElementById('about').scrollIntoView;">Upload
+              Image</button>
+          </a>
+        </h1>
+      </div>
+    </div>
+    <!-- end of header banner -->
+  </section>
+  <!-- end of header section -->
+
+  <!-- about section -->
+  <section id="about" class="about container py-5">
+    <!-- title -->
+
+        {% block content %}
+
+        {% endblock content %}
+
+
+  </section>
+  <!-- end of about section -->
+
+  <!-- footer section -->
+  <footer>
+    <div class="footer-wrapper">
+      <div class="footer-bg">
+        <ul class="footer-icons">
+          <li class="footer-icon-item">
+            <i class="fab fa-facebook-f"></i>
+          </li>
+          <li class="footer-icon-item">
+            <i class="fab fa-twitter"></i>
+          </li>
+          <li class="footer-icon-item">
+            <i class="fab fa-instagram"></i>
+          </li>
+          <li class="footer-icon-item">
+            <i class="fab fa-youtube"></i>
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-text">
+        <p class="text-light">Copyright &copy; 2022 Design Project</p>
+      </div>
+    </div>
+  </footer>
+  <!-- end of footer section -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+  <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="{% static 'js/cart1.js' %}"></script>
+  <script src="{% static 'mail/jqBootstrapValidation.min.js' %}"></script>
+  <script src="{% static 'mail/contact.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+  <script src="{% static 'images/Upload/script.js'%}"></script>
+</body>
+
+</html>

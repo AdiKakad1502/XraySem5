@@ -20,7 +20,8 @@ class Dashboard(View):
     def get(self, request):
         user = UserBase.objects.get(user_name=request.user)
         results = user_result(request)
-        length = int(len(results))
+        length = user.ReportCount
+        print(length)
         return render(request,
                       'dashboard.html',
                       {'section': 'profile', 'user_': user, 'results': results, 'length': length})
@@ -79,6 +80,7 @@ class AccountRegister(View):
             })
             user.email_user(subject=subject, message=message)
             return HttpResponse(f'Account Registered, activation code sent to {user.email}')
+        return render(request, 'register.html', {'form': registerForm})
 
 class AccountActivate(View):
     def get(self, request, uidb64, token):

@@ -29,17 +29,19 @@
           </div>
             {% endif %}
     {% for result in results %}
+            {% if result.is_visible == True %}
           <div class="jumbotron">
             <h3 class="">Pneumonia : {{result.result_pneumonia}} Covid-19: {{result.result_covid}}</h3>
-            <p class="lead">{{result.desc}}</p>
+            <p class="lead">{{result.desc}}<br>{{result.is_visible}}</p>
             <hr class="my-4">
-            <p>conducted on {{result.created}}</p>
+            <p>conducted on {{result.created}} <br><span><a href= "{% url 'image_classification:deletereport' %}?q={{result.id}}">delete report</a></span></p>
 
             <p class="lead">
               <a class="btn btn-light btn-lg" href= "{% url 'image_classification:getpdf' %}?q={{result.id}}" role="button">Get PDF file</a>
+
             </p>
           </div>
-
+            {% endif %}
     {% endfor %}
         </div>
         </div>
